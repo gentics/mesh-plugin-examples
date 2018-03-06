@@ -47,6 +47,27 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>3.0.1</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Private-Package>com.gentics.mesh.plugin.example*</Private-Package>
+						<Bundle-Activator>com.gentics.mesh.plugin.example.HelloWorldPlugin</Bundle-Activator>
+						<Export-Package>com.gentics.mesh.plugin.example.service</Export-Package>
+						<_plugin>org.apache.felix.ipojo.bnd.PojoizationPlugin</_plugin>
+					</instructions>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>bnd-ipojo-plugin</artifactId>
+						<version>1.12.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
