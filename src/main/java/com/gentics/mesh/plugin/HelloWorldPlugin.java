@@ -1,4 +1,4 @@
-package com.gentics.mesh.plugin.example;
+package com.gentics.mesh.plugin;
 
 import org.osgi.framework.BundleContext;
 
@@ -8,6 +8,7 @@ public class HelloWorldPlugin extends AbstractPlugin {
 
 	@Override
 	public void start(BundleContext context) {
+		System.out.println("Start");
 		// Note that an extension will be deployed multiple times
 		// and thus constructed multiple times.
 		addExtension(() -> new HelloWorldRestExtension());
@@ -15,7 +16,7 @@ public class HelloWorldPlugin extends AbstractPlugin {
 
 	@Override
 	public void stop(BundleContext context) {
-
+		System.out.println("Stop");
 	}
 
 }

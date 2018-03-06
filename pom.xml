@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.gentics.mesh</groupId>
 	<artifactId>mesh-hello-world-plugin</artifactId>
 	<version>0.18.0-SNAPSHOT</version>
 
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Gentics Mesh - Hello World - Plugin</name>
 
 	<properties>
@@ -53,12 +54,15 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Private-Package>com.gentics.mesh.plugin.example*</Private-Package>
-						<Bundle-Activator>com.gentics.mesh.plugin.example.HelloWorldPlugin</Bundle-Activator>
-						<Export-Package>com.gentics.mesh.plugin.example.service</Export-Package>
+						<Private-Package>com.gentics.mesh.plugin*</Private-Package>
+						<Bundle-Activator>com.gentics.mesh.plugin.HelloWorldPlugin</Bundle-Activator>
+						<Export-Package>com.gentics.mesh.plugin.osgi</Export-Package>
+						<!-- 
 						<_plugin>org.apache.felix.ipojo.bnd.PojoizationPlugin</_plugin>
+						 -->
 					</instructions>
 				</configuration>
+				<!-- 
 				<dependencies>
 					<dependency>
 						<groupId>org.apache.felix</groupId>
@@ -66,6 +70,7 @@
 						<version>1.12.1</version>
 					</dependency>
 				</dependencies>
+				 -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

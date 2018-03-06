@@ -1,4 +1,4 @@
-package com.gentics.mesh.plugin.example;
+package com.gentics.mesh.plugin;
 
 import com.gentics.mesh.plugin.rest.AbstractRestExtension;
 import com.gentics.mesh.plugin.rest.RestExtensionScope;
