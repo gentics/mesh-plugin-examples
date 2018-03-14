@@ -57,20 +57,12 @@
 						<Private-Package>com.gentics.mesh.plugin*</Private-Package>
 						<Bundle-Activator>com.gentics.mesh.plugin.HelloWorldPlugin</Bundle-Activator>
 						<Export-Package>com.gentics.mesh.plugin.osgi</Export-Package>
-						<!-- 
-						<_plugin>org.apache.felix.ipojo.bnd.PojoizationPlugin</_plugin>
-						 -->
+						<!-- <_plugin>org.apache.felix.ipojo.bnd.PojoizationPlugin</_plugin> -->
 					</instructions>
 				</configuration>
-				<!-- 
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.felix</groupId>
-						<artifactId>bnd-ipojo-plugin</artifactId>
-						<version>1.12.1</version>
-					</dependency>
-				</dependencies>
-				 -->
+				<!-- <dependencies> <dependency> <groupId>org.apache.felix</groupId> 
+					<artifactId>bnd-ipojo-plugin</artifactId> <version>1.12.1</version> </dependency> 
+					</dependencies> -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
