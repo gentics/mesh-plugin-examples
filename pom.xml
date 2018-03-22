@@ -7,7 +7,7 @@
 	<artifactId>mesh-hello-world-plugin</artifactId>
 	<version>0.18.0-SNAPSHOT</version>
 
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 	<name>Gentics Mesh - Hello World - Plugin</name>
 
 	<properties>
@@ -48,30 +48,13 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>3.0.1</version>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Private-Package>com.gentics.mesh.plugin*</Private-Package>
-						<Bundle-Activator>com.gentics.mesh.plugin.HelloWorldPlugin</Bundle-Activator>
-						<Export-Package>com.gentics.mesh.plugin.osgi</Export-Package>
-						<!-- <_plugin>org.apache.felix.ipojo.bnd.PojoizationPlugin</_plugin> -->
-					</instructions>
-				</configuration>
-				<!-- <dependencies> <dependency> <groupId>org.apache.felix</groupId> 
-					<artifactId>bnd-ipojo-plugin</artifactId> <version>1.12.1</version> </dependency> 
-					</dependencies> -->
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
 				<configuration>
 					<verbose>true</verbose>
-					<compilerVersion>1.8</compilerVersion>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>8</source>
+					<target>8</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -94,7 +77,26 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Main-Verticle>service:com.gentics.mesh.plugin.plugin-service</Main-Verticle>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
 		</plugins>
+
+
 	</build>
 
 	<repositories>

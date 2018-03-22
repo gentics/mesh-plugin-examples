@@ -1,8 +1,9 @@
 package com.gentics.mesh.plugin;
 
-import org.osgi.framework.BundleContext;
 
 import com.gentics.mesh.plugin.rest.AbstractPlugin;
+
+import io.vertx.core.Future;
 
 public class HelloWorldPlugin extends AbstractPlugin {
 
@@ -11,21 +12,21 @@ public class HelloWorldPlugin extends AbstractPlugin {
 		return "hello world plugin";
 	}
 
+	
 	@Override
-	public void start(BundleContext context) {
+	public void start(Future<Void> future) {
 		System.out.println("Starting " + getName());
+		
+		System.out.println("Test");
+		
 		// Note that an extension will be deployed multiple times
 		// and thus constructed multiple times.
 		addExtension(() -> new HelloWorldRestExtension());
-
-		System.out.println("Add service on {" + getName() + "}");
-		context.registerService(Plugin.class, this, null);
-
 	}
 
 	@Override
-	public void stop(BundleContext context) {
-		System.out.println("Stoping " + getName());
+	public void stop(Future<Void> future) {
+		System.out.println("Stopping " + getName());
 	}
 
 }
