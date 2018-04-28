@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import com.gentics.mesh.Mesh;
 import com.gentics.mesh.core.rest.project.ProjectCreateRequest;
+import com.gentics.mesh.core.rest.project.ProjectResponse;
+import com.gentics.mesh.json.JsonUtil;
 import com.gentics.mesh.plugin.HelloWorldPlugin;
 import com.gentics.mesh.plugin.Plugin;
 import com.gentics.mesh.test.local.MeshLocalServer;
@@ -19,7 +21,7 @@ import okhttp3.OkHttpClient.Builder;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MeshPluginTest {
+public class HelloWorldPluginTest {
 
 	private Plugin plugin = new HelloWorldPlugin();
 
@@ -27,11 +29,6 @@ public class MeshPluginTest {
 	public static final MeshLocalServer server = new MeshLocalServer()
 		.withInMemoryMode()
 		.waitForStartup();
-
-	private OkHttpClient client() {
-		Builder builder = new OkHttpClient.Builder();
-		return builder.build();
-	}
 
 	@Test
 	public void testPlugin() throws IOException {
@@ -45,10 +42,18 @@ public class MeshPluginTest {
 			call(() -> server.client().createProject(request));
 		}
 
-		assertEquals("world", get("/api/v1/plugins/" + plugin.getName() + "/hello"));
-		assertEquals("world-project", get("/api/v1/test0/plugins/" + plugin.getName() + "/hello"));
-		assertEquals("world-project", get("/api/v1/test1/plugins/" + plugin.getName() + "/hello"));
+		assertEquals("world", get("/api/v1/plugins/" + plugin.getAPIName() + "/hello"));
+		assertEquals("world-project-test0", get("/api/v1/test0/plugins/" + plugin.getAPIName() + "/hello"));
+		assertEquals("world-project-test1", get("/api/v1/test1/plugins/" + plugin.getAPIName() + "/hello"));
 
+		ProjectResponse project = JsonUtil.readValue(get("/api/v1/plugins/" + plugin.getAPIName() + "/project"), ProjectResponse.class);
+		assertEquals(HelloWorldPlugin.PROJECT_NAME, project.getName());
+
+	}
+
+	private OkHttpClient client() {
+		Builder builder = new OkHttpClient.Builder();
+		return builder.build();
 	}
 
 	private String get(String path) throws IOException {

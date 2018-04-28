@@ -4,3 +4,6 @@
 /.settings
 /*.iml
 /.project
+/.vertx
+/mesh.lock
+/plugins
