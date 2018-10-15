@@ -16,6 +16,7 @@ import com.gentics.mesh.plugin.HelloWorldPlugin;
 import com.gentics.mesh.plugin.Plugin;
 import com.gentics.mesh.test.local.MeshLocalServer;
 
+import io.vertx.core.json.JsonObject;
 import okhttp3.OkHttpClient;
 import okhttp3.OkHttpClient.Builder;
 import okhttp3.Request;
@@ -45,6 +46,9 @@ public class HelloWorldPluginTest {
 		assertEquals("world", get("/api/v1/plugins/" + plugin.getAPIName() + "/hello"));
 		assertEquals("world-project-test0", get("/api/v1/test0/plugins/" + plugin.getAPIName() + "/hello"));
 		assertEquals("world-project-test1", get("/api/v1/test1/plugins/" + plugin.getAPIName() + "/hello"));
+
+		JsonObject meResponse = new JsonObject(get("/api/v1/plugins/" + plugin.getAPIName() + "/me"));
+		assertEquals("anonymous", meResponse.getString("username"));
 
 		ProjectResponse project = JsonUtil.readValue(get("/api/v1/plugins/" + plugin.getAPIName() + "/project"), ProjectResponse.class);
 		assertEquals(HelloWorldPlugin.PROJECT_NAME, project.getName());

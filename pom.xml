@@ -7,7 +7,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mesh.version>0.19.0</mesh.version>
+		<mesh.version>0.26.0</mesh.version>
 	</properties>
 
 	<dependencies>

@@ -63,6 +63,16 @@ public class HelloWorldPlugin extends AbstractPluginVerticle {
 		// Path: /api/v1/plugins/helloworld/static
 		globalRouter.route("/static/*").handler(staticHandler);
 
+		// Route which will return the user information
+		// Path: /api/v1/plugins/helloworld/me
+		globalRouter.route("/me").handler(rc -> {
+			PluginContext context = wrap(rc);
+			context.client().me().toSingle().subscribe(me -> {
+				rc.response().putHeader("content-type", "application/json");
+				rc.response().end(me.toJson());
+			}, rc::fail);
+		});
+
 	}
 
 	/**
