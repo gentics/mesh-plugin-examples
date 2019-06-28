@@ -7,7 +7,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mesh.version>0.26.0</mesh.version>
+		<mesh.version>0.36.2-SNAPSHOT</mesh.version>
 	</properties>
 
 	<dependencies>
@@ -15,6 +15,12 @@
 			<groupId>com.gentics.mesh</groupId>
 			<artifactId>mesh-plugin-api</artifactId>
 			<version>${mesh.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.pf4j</groupId>
+			<artifactId>pf4j</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Test dependencies -->

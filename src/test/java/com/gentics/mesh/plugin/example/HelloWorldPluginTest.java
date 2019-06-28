@@ -7,13 +7,13 @@ import java.io.IOException;
 
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.pf4j.Plugin;
 
 import com.gentics.mesh.Mesh;
 import com.gentics.mesh.core.rest.project.ProjectCreateRequest;
 import com.gentics.mesh.core.rest.project.ProjectResponse;
 import com.gentics.mesh.json.JsonUtil;
 import com.gentics.mesh.plugin.HelloWorldPlugin;
-import com.gentics.mesh.plugin.Plugin;
 import com.gentics.mesh.test.local.MeshLocalServer;
 
 import io.vertx.core.json.JsonObject;
@@ -24,7 +24,7 @@ import okhttp3.Response;
 
 public class HelloWorldPluginTest {
 
-	private Plugin plugin = new HelloWorldPlugin();
+	private Plugin plugin = new HelloWorldPlugin(null);
 
 	@ClassRule
 	public static final MeshLocalServer server = new MeshLocalServer()
