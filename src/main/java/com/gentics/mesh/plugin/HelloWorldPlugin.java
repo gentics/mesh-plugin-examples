@@ -28,33 +28,33 @@ public class HelloWorldPlugin extends AbstractPlugin {
 		super(wrapper);
 	}
 
-	@Override
-	public Completable initialize() {
-		// The initialize method can be used to setup initial data which is needed by the plugin.
-		// You can use the admin client to setup initial data or access the filesystem to read/write data.
-		String path = new File(getStorageDir(), "dummyFile.txt").getAbsolutePath();
-		return getRxVertx().fileSystem()
-			.rxWriteFile(path, Buffer.buffer("test"))
-			.andThen(createProject());
-	}
-
-	/**
-	 * Utilize the admin client and create a project.
-	 * 
-	 * @return
-	 */
-	private Completable createProject() {
-		ProjectCreateRequest request = new ProjectCreateRequest();
-		request.setName(PROJECT_NAME);
-		request.setSchemaRef("folder");
-		MeshRestClient client = adminClient();
-		return client.createProject(request).toCompletable();
-	}
-
 	@Extension
 	public static class HelloRestEndpointExtension extends AbstractRestExtension {
 
 		public StaticHandler staticHandler = StaticHandler.create("webroot", getClass().getClassLoader());
+
+		@Override
+		public Completable initialize() {
+			// The initialize method can be used to setup initial data which is needed by the plugin.
+			// You can use the admin client to setup initial data or access the filesystem to read/write data.
+			String path = new File(getStorageDir(), "dummyFile.txt").getAbsolutePath();
+			return getRxVertx().fileSystem()
+				.rxWriteFile(path, Buffer.buffer("test"))
+				.andThen(createProject());
+		}
+
+		/**
+		 * Utilize the admin client and create a project.
+		 * 
+		 * @return
+		 */
+		private Completable createProject() {
+			ProjectCreateRequest request = new ProjectCreateRequest();
+			request.setName(PROJECT_NAME);
+			request.setSchemaRef("folder");
+			MeshRestClient client = adminClient();
+			return client.createProject(request).toCompletable();
+		}
 
 		@Override
 		public void registerEndpoints(Router globalRouter, Router projectRouter) {
