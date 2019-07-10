@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.pf4j.Plugin;
 
 import com.gentics.mesh.Mesh;
 import com.gentics.mesh.core.rest.project.ProjectCreateRequest;
@@ -24,7 +23,7 @@ import okhttp3.Response;
 
 public class HelloWorldPluginTest {
 
-	private Plugin plugin = new HelloWorldPlugin(null);
+	private static final String apiName = "hello-world";
 
 	@ClassRule
 	public static final MeshLocalServer server = new MeshLocalServer()
@@ -34,7 +33,8 @@ public class HelloWorldPluginTest {
 	@Test
 	public void testPlugin() throws IOException {
 		Mesh mesh = server.getMesh();
-		mesh.getVertx().deployVerticle(plugin);
+
+		mesh.deployPlugin(HelloWorldPlugin.class, apiName);
 
 		for (int i = 0; i < 2; i++) {
 			ProjectCreateRequest request = new ProjectCreateRequest();
@@ -43,14 +43,14 @@ public class HelloWorldPluginTest {
 			call(() -> server.client().createProject(request));
 		}
 
-		assertEquals("world", get("/api/v1/plugins/" + plugin.getAPIName() + "/hello"));
-		assertEquals("world-project-test0", get("/api/v1/test0/plugins/" + plugin.getAPIName() + "/hello"));
-		assertEquals("world-project-test1", get("/api/v1/test1/plugins/" + plugin.getAPIName() + "/hello"));
+		assertEquals("world", get("/api/v1/plugins/" + apiName+ "/hello"));
+		assertEquals("world-project-test0", get("/api/v1/test0/plugins/" + apiName+ "/hello"));
+		assertEquals("world-project-test1", get("/api/v1/test1/plugins/" + apiName+ "/hello"));
 
-		JsonObject meResponse = new JsonObject(get("/api/v1/plugins/" + plugin.getAPIName() + "/me"));
+		JsonObject meResponse = new JsonObject(get("/api/v1/plugins/" + apiName+ "/me"));
 		assertEquals("anonymous", meResponse.getString("username"));
 
-		ProjectResponse project = JsonUtil.readValue(get("/api/v1/plugins/" + plugin.getAPIName() + "/project"), ProjectResponse.class);
+		ProjectResponse project = JsonUtil.readValue(get("/api/v1/plugins/" + apiName + "/project"), ProjectResponse.class);
 		assertEquals(HelloWorldPlugin.PROJECT_NAME, project.getName());
 
 	}

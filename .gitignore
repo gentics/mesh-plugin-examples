@@ -1,5 +1,6 @@
 /target
 /.config
+/.factorypath
 /.classpath
 /.settings
 /*.iml
