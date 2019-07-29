@@ -23,6 +23,7 @@
 			<groupId>com.gentics.mesh.plugin</groupId>
 			<artifactId>plugin-extension-api</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
