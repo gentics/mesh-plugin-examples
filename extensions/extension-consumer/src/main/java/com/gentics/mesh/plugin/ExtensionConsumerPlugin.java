@@ -24,7 +24,7 @@ public class ExtensionConsumerPlugin extends AbstractPlugin implements RestPlugi
 		globalRouter.route("/extensions").handler(rc -> {
 			StringBuilder builder = new StringBuilder();
 			getWrapper().getPluginManager().getExtensions(DummyExtensionPoint.class).stream().map(e -> e.name()).forEach(name -> {
-				builder.append(name + "\n");
+				builder.append(name);
 			});
 			rc.response().end(builder.toString());
 		});
