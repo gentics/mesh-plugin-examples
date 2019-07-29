@@ -54,7 +54,7 @@ public class HelloWorldPlugin extends AbstractPlugin implements RestPlugin {
 
 	@Override
 	public void registerEndpoints(Router globalRouter, Router projectRouter) {
-		log.info("Registering routes for {" + getName() + "}");
+		log.info("Registering routes for {" + id() + "}");
 
 		// Route which demonstrates that the API can be directly extended
 		// Path: /api/v1/plugins/helloworld/hello

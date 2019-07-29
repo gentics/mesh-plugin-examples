@@ -1,9 +1,0 @@
-{
-  "name": "Hello World",
-  "apiName": "helloworld",
-  "version": "1.0",
-  "description": "A very basic hello world plugin which demonstrates the plugin concept",
-  "license": "Apache License 2.0",
-  "inception": "05-03-2018",
-  "author": "Johannes Schüth"
-}

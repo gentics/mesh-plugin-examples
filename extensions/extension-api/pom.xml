@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>plugin-extension-api</artifactId>
+	<parent>
+		<groupId>com.gentics.mesh.plugin</groupId>
+		<artifactId>plugin-extension-example</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mesh.version>0.36.4-SNAPSHOT</mesh.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.pf4j</groupId>
+			<artifactId>pf4j</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+
+
+</project>

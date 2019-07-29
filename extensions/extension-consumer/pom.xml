@@ -1,25 +1,40 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.gentics.mesh.plugin</groupId>
-	<artifactId>mesh-hello-world-plugin</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+
+	<artifactId>plugin-extension-consumer</artifactId>
+	<parent>
+		<groupId>com.gentics.mesh.plugin</groupId>
+		<artifactId>plugin-extension-example</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mesh.version>0.36.4-SNAPSHOT</mesh.version>
+		<plugin.id>extension-consumer</plugin.id>
+		<plugin.name>The extension consumer</plugin.name>
+		<plugin.description>A plugin which consumes an extension provided by
+			another plugin</plugin.description>
+		<plugin.class>com.gentics.mesh.plugin.ExtensionConsumerPlugin</plugin.class>
 	</properties>
 
 	<dependencies>
+		<!-- Commonly shared plugin api for the extension -->
+		<dependency>
+			<groupId>com.gentics.mesh.plugin</groupId>
+			<artifactId>plugin-extension-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Gentics Mesh Plugin API -->
 		<dependency>
 			<groupId>com.gentics.mesh</groupId>
 			<artifactId>mesh-plugin-api</artifactId>
-			<version>${mesh.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.pf4j</groupId>
 			<artifactId>pf4j</artifactId>
-			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -27,35 +42,22 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.gentics.mesh</groupId>
 			<artifactId>mesh-test-common</artifactId>
-			<version>${mesh.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.gentics.mesh</groupId>
 			<artifactId>mesh-core</artifactId>
-			<version>${mesh.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
-				<configuration>
-					<verbose>true</verbose>
-					<source>8</source>
-					<target>8</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -67,14 +69,15 @@
 						</goals>
 						<configuration>
 							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
 										<Plugin-Id>${plugin.id}</Plugin-Id>
 										<Plugin-Version>${plugin.version}</Plugin-Version>
 										<Plugin-Author>${plugin.author}</Plugin-Author>
 										<Plugin-Class>${plugin.class}</Plugin-Class>
 										<Plugin-Description>${plugin.description}</Plugin-Description>
-										<Plugin-License>Apache License 2.0</Plugin-License>
+										<Plugin-License>${plugin.license}</Plugin-License>
 										<Plugin-Inception>${plugin.inception}</Plugin-Inception>
 									</manifestEntries>
 								</transformer>
@@ -83,35 +86,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>maven.gentics.com</id>
-			<name>Gentics Maven Repository</name>
-			<url>https://maven.gentics.com/maven2</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>lan.releases</id>
-			<name>Gentics Releases Repository</name>
-			<url>https://repo.gentics.com/artifactory/lan.releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>lan.snapshots</id>
-			<name>Gentics Snapshots Repository</name>
-			<url>https://repo.gentics.com/artifactory/lan.snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 </project>
