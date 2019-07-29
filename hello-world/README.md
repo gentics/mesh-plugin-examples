@@ -30,26 +30,38 @@ The `HelloWorldPluginTest.java` test class demonstrates how to test a plugin.
 
 ### Format
 
-Every plugin must contain a manifest file. The `mesh-plugin.json` must be placed in the project resources.
+Every plugin must contain a manifest. When using Maven the manifest can be generated via the `maven-shade-plugin`.
 
-```json
-{
-  "name": "Hello World",
-  "apiName": "helloworld",
-  "version": "1.0",
-  "description": "A very basic hello world plugin which demonstrates the plugin concept",
-  "license": "Apache License 2.0",
-  "inception": "05-03-2018",
-  "author": "Johannes Schüth"
-}
-```
-
-The `com.gentics.mesh.plugin.plugin-service.json` file must reference the plugin which should be loaded. 
-
-```json
-{
-  "main": "com.gentics.mesh.plugin.HelloWorldPlugin"
-}
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-shade-plugin</artifactId>
+  <version>3.2.1</version>
+  <executions>
+    <execution>
+      <phase>package</phase>
+      <goals>
+        <goal>shade</goal>
+      </goals>
+      <configuration>
+        <transformers>
+          <transformer
+            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+            <manifestEntries>
+              <Plugin-Id>${plugin.id}</Plugin-Id>
+              <Plugin-Version>${plugin.version}</Plugin-Version>
+              <Plugin-Author>${plugin.author}</Plugin-Author>
+              <Plugin-Class>${plugin.class}</Plugin-Class>
+              <Plugin-Description>${plugin.description}</Plugin-Description>
+              <Plugin-License>${plugin.license}</Plugin-License>
+              <Plugin-Inception>${plugin.inception}</Plugin-Inception>
+            </manifestEntries>
+          </transformer>
+        </transformers>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
 ```
 
 ## Documentation
