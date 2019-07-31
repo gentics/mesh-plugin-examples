@@ -8,12 +8,13 @@ import org.pf4j.PluginWrapper;
 
 import com.gentics.mesh.plugin.env.PluginEnvironment;
 
-import graphql.schema.GraphQLObjectType;
+import graphql.schema.GraphQLSchema;
+import graphql.schema.GraphQLSchema.Builder;
 import io.reactivex.Completable;
 
 public class GraphQLExamplePlugin extends AbstractPlugin implements GraphQLPlugin {
 
-	private GraphQLObjectType type;
+	private GraphQLSchema schema;
 
 	public GraphQLExamplePlugin(PluginWrapper wrapper, PluginEnvironment env) {
 		super(wrapper, env);
@@ -21,7 +22,8 @@ public class GraphQLExamplePlugin extends AbstractPlugin implements GraphQLPlugi
 
 	@Override
 	public Completable initialize() {
-		type = newObject()
+		Builder schemaBuilder = GraphQLSchema.newSchema();
+		schema = schemaBuilder.query(newObject()
 			.name(prefixType("PluginDataType"))
 			.description("Dummy GraphQL Test")
 			.field(newFieldDefinition().name("text")
@@ -30,13 +32,13 @@ public class GraphQLExamplePlugin extends AbstractPlugin implements GraphQLPlugi
 				.dataFetcher(env -> {
 					return "hello-world";
 				}))
-			.build();
+			.build()).build();
 		return Completable.complete();
 	}
 
 	@Override
-	public GraphQLObjectType createRootType() {
-		return type;
+	public GraphQLSchema createRootSchema() {
+		return schema;
 	}
 
 }
