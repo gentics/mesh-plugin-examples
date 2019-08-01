@@ -7,6 +7,8 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import org.pf4j.PluginWrapper;
 
 import com.gentics.mesh.plugin.env.PluginEnvironment;
+import com.gentics.mesh.plugin.graphql.GraphQLPlugin;
+import com.gentics.mesh.plugin.graphql.GraphQLPluginContext;
 
 import graphql.schema.GraphQLSchema;
 import graphql.schema.GraphQLSchema.Builder;
@@ -30,6 +32,12 @@ public class GraphQLExamplePlugin extends AbstractPlugin implements GraphQLPlugi
 				.type(GraphQLString)
 				.description("Say hello to the world of plugins")
 				.dataFetcher(env -> {
+					GraphQLPluginContext ctx = env.getContext();
+					// We can check for which project the query was executed
+					System.out.println("Project Name: " + ctx.projectName());
+					System.out.println("Project Uuid: " + ctx.projectUuid());
+					// We can also access the user
+					System.out.println("User: " + ctx.principal().encodePrettily());
 					return "hello-world";
 				}))
 			.build()).build();

@@ -37,11 +37,6 @@
 			<groupId>com.gentics.mesh</groupId>
 			<artifactId>mesh-plugin-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.pf4j</groupId>
-			<artifactId>pf4j</artifactId>
-				<scope>provided</scope>
-		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>

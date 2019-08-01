@@ -8,6 +8,9 @@ import com.gentics.mesh.rest.client.MeshRestClient;
 
 import io.reactivex.Completable;
 
+/**
+ * This example shows how an to directly deploy into a Gentics Mesh instance. 
+ */
 public class PluginRunnerExample {
 
 	private static String PROJECT_NAME = "test";
