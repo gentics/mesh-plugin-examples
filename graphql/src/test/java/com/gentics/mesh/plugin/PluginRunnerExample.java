@@ -32,7 +32,7 @@ public class PluginRunnerExample {
 
 		// Login and create the needed project
 		client.setLogin("admin", "admin");
-		Completable clientLogin = client.login().toCompletable();
+		Completable clientLogin = client.login().ignoreElement();
 		Completable createProject = Completable
 			.defer(() -> client.createProject(new ProjectCreateRequest().setName(PROJECT_NAME).setSchemaRef("folder")).toCompletable());
 
