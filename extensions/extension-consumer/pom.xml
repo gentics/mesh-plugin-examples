@@ -29,7 +29,7 @@
 		<!-- Gentics Mesh Plugin API -->
 		<dependency>
 			<groupId>com.gentics.mesh</groupId>
-			<artifactId>mesh-plugin-api</artifactId>
+			<artifactId>mesh-plugin-dep</artifactId>
 			<scope>provided</scope>
 		</dependency>
 

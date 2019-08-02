@@ -40,7 +40,7 @@
          Please note that these dependencies need to be set to provided -->
     <dependency>
       <groupId>com.gentics.mesh</groupId>
-      <artifactId>mesh-plugin-api</artifactId>
+      <artifactId>mesh-plugin-dep</artifactId>
       <scope>provided</scope>
     </dependency>
 

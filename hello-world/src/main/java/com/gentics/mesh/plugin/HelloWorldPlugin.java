@@ -1,7 +1,5 @@
 package com.gentics.mesh.plugin;
 
-import static io.netty.handler.codec.http.HttpResponseStatus.OK;
-
 import java.io.File;
 
 import org.pf4j.PluginWrapper;
@@ -75,7 +73,7 @@ public class HelloWorldPlugin extends AbstractPlugin implements RestPlugin {
 		globalRouter.route("/project").handler(rc -> {
 			PluginContext context = wrap(rc);
 			adminClient().findProjectByName(PROJECT_NAME).toSingle().subscribe(project -> {
-				context.send(project, OK);
+				context.send(project, 200);
 			}, rc::fail);
 		});
 
