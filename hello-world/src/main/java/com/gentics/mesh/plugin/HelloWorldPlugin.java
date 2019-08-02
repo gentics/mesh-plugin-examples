@@ -51,26 +51,11 @@ public class HelloWorldPlugin extends AbstractPlugin implements RestPlugin {
 	}
 
 	@Override
-	public void registerEndpoints(Router globalRouter, Router projectRouter) {
-		log.info("Registering routes for {" + id() + "}");
-
-		// Route which demonstrates that the API can be directly extended
-		// Path: /api/v1/plugins/helloworld/hello
-		globalRouter.route("/hello").handler(rc -> {
-			rc.response().end("world");
-		});
-
-		// Route which demonstrates that plugins can also have project specific routes.
-		// Path: /api/v1/:projectName/plugins/helloworld/hello
-		// It is possible to access the project information via the context project() method.
-		projectRouter.route("/hello").handler(rc -> {
-			PluginContext context = wrap(rc);
-			rc.response().end("world-project-" + context.project().getString("name"));
-		});
-
+	public Router createGlobalRouter() {
+		Router router = Router.router(vertx());
 		// Route which will use the admin client to load the previously created project and return it.
-		// Path: /api/v1/plugins/helloworld/project
-		globalRouter.route("/project").handler(rc -> {
+		// Path: /api/v1/plugins/hello-world/project
+		router.route("/project").handler(rc -> {
 			PluginContext context = wrap(rc);
 			adminClient().findProjectByName(PROJECT_NAME).toSingle().subscribe(project -> {
 				context.send(project, 200);
@@ -78,12 +63,12 @@ public class HelloWorldPlugin extends AbstractPlugin implements RestPlugin {
 		});
 
 		// Route to serve static contents from the webroot resources folder of the plugin.
-		// Path: /api/v1/plugins/helloworld/static
-		globalRouter.route("/static/*").handler(staticHandler);
+		// Path: /api/v1/plugins/hello-world/static
+		router.route("/static/*").handler(staticHandler);
 
 		// Route which will return the user information
-		// Path: /api/v1/plugins/helloworld/me
-		globalRouter.route("/me").handler(rc -> {
+		// Path: /api/v1/plugins/hello-world/me
+		router.route("/me").handler(rc -> {
 			PluginContext context = wrap(rc);
 			context.client().me().toSingle().subscribe(me -> {
 				rc.response().putHeader("content-type", "application/json");
@@ -91,10 +76,32 @@ public class HelloWorldPlugin extends AbstractPlugin implements RestPlugin {
 			}, rc::fail);
 		});
 
+		// Route which demonstrates that the API can be directly extended
+		// Path: /api/v1/plugins/hello-world/hello
+		router.route("/hello").handler(rc -> {
+			rc.response().end("world");
+		});
+
+		return router;
 	}
 
 	@Override
-	public String apiName() {
+	public Router createProjectRouter() {
+		Router router = Router.router(vertx());
+		log.info("Registering routes for {" + id() + "}");
+
+		// Route which demonstrates that plugins can also have project specific routes.
+		// Path: /api/v1/:projectName/plugins/helloworld/hello
+		// It is possible to access the project information via the context project() method.
+		router.route("/hello").handler(rc -> {
+			PluginContext context = wrap(rc);
+			rc.response().end("world-project-" + context.project().getString("name"));
+		});
+		return router;
+	}
+
+	@Override
+	public String restApiName() {
 		return "hello-world";
 	}
 
