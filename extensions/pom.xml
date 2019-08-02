@@ -8,7 +8,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mesh.version>0.36.4-SNAPSHOT</mesh.version>
+		<mesh.version>0.36.8-SNAPSHOT</mesh.version>
 
 		<plugin.license>Apache License 2.0</plugin.license>
 		<plugin.version>${project.version}</plugin.version>
@@ -60,9 +60,6 @@
 			<releases>
 				<enabled>true</enabled>
 			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
 		</repository>
 	</repositories>
 </project>

@@ -9,6 +9,7 @@ import com.gentics.mesh.plugin.env.PluginEnvironment;
 import com.gentics.mesh.rest.client.MeshRestClient;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -21,20 +22,29 @@ public class HelloWorldPlugin extends AbstractPlugin implements RestPlugin {
 
 	public static final String PROJECT_NAME = "HelloWorld";
 
-	public StaticHandler staticHandler = StaticHandler.create("webroot", getClass().getClassLoader());
-
 	public HelloWorldPlugin(PluginWrapper wrapper, PluginEnvironment env) {
 		super(wrapper, env);
 	}
 
 	@Override
 	public Completable initialize() {
+		Single<HelloConfig> rxConfig = Single.fromCallable(() -> {
+			if (!getConfigFile().exists()) {
+				HelloConfig config = new HelloConfig().setName("hello-world");
+				return writeConfig(config);
+			} else {
+				return readConfig(HelloConfig.class);
+			}
+		}).doOnSuccess(config -> {
+			log.info("Loaded config {\n" + PluginConfigUtil.getYAMLMapper().writeValueAsString(config) + "\n}");
+		});
+
 		// The initialize method can be used to setup initial data which is needed by the plugin.
 		// You can use the admin client to setup initial data or access the filesystem to read/write data.
 		String path = new File(getStorageDir(), "dummyFile.txt").getAbsolutePath();
-		return getRxVertx().fileSystem()
+		return rxConfig.ignoreElement().andThen(getRxVertx().fileSystem()
 			.rxWriteFile(path, Buffer.buffer("test"))
-			.andThen(createProject());
+			.andThen(createProject()));
 	}
 
 	/**
@@ -64,6 +74,7 @@ public class HelloWorldPlugin extends AbstractPlugin implements RestPlugin {
 
 		// Route to serve static contents from the webroot resources folder of the plugin.
 		// Path: /api/v1/plugins/hello-world/static
+		StaticHandler staticHandler = StaticHandler.create("webroot-hello", getClass().getClassLoader());
 		router.route("/static/*").handler(staticHandler);
 
 		// Route which will return the user information

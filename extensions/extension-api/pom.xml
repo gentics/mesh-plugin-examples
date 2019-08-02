@@ -12,7 +12,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mesh.version>0.36.4-SNAPSHOT</mesh.version>
 	</properties>
 
 	<dependencies>

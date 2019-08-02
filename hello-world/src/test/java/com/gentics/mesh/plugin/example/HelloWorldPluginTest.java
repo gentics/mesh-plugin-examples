@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import com.gentics.mesh.Mesh;
 import com.gentics.mesh.core.rest.project.ProjectCreateRequest;
 import com.gentics.mesh.core.rest.project.ProjectResponse;
 import com.gentics.mesh.json.JsonUtil;
@@ -28,14 +27,11 @@ public class HelloWorldPluginTest {
 	@ClassRule
 	public static final MeshLocalServer server = new MeshLocalServer()
 		.withInMemoryMode()
+		.withPlugin(HelloWorldPlugin.class, apiName)
 		.waitForStartup();
 
 	@Test
 	public void testPlugin() throws IOException {
-		Mesh mesh = server.getMesh();
-
-		mesh.deployPlugin(HelloWorldPlugin.class, apiName);
-
 		for (int i = 0; i < 2; i++) {
 			ProjectCreateRequest request = new ProjectCreateRequest();
 			request.setName("test" + i);
