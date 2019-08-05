@@ -66,4 +66,4 @@ Every plugin must contain a manifest. When using Maven the manifest can be gener
 
 ## Documentation
 
-You can read more about the [plugin system in our documentation](https://getmesh.io/docs/beta/plugin-system.html).
+You can read more about the [plugin system in our documentation](https://getmesh.io/docs/plugin-system).

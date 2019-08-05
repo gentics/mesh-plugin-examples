@@ -61,17 +61,17 @@ public class ExtensionConsumerPlugin extends AbstractPlugin implements RestPlugi
 	}
 
 	@Override
-	public void registerEndpoints(Router globalRouter, Router projectRouter) {
+	public Router createGlobalRouter() {
 		log.info("Registering routes for {" + name() + "}");
-
-		globalRouter.route("/extensions").handler(rc -> {
+		Router router = Router(vertx());
+		router.route("/extensions").handler(rc -> {
 			StringBuilder builder = new StringBuilder();
 			getWrapper().getPluginManager().getExtensions(DummyExtensionPoint.class).stream().map(e -> e.name()).forEach(name -> {
 				builder.append(name);
 			});
 			rc.response().end(builder.toString());
 		});
-
+		return router;
 	}
 
 }
