@@ -14,7 +14,7 @@ pluginApi {
 
 ## Plugin
 
-A `graphql` plugin must implement the `GraphQLPlugin` interface. This will require the `createType()` method.
+A `graphql` plugin must implement the `GraphQLPlugin` interface. This will require the `createRootSchema()` method.
 
 The [GraphQL-Java](https://github.com/graphql-java/graphql-java) library will be used to create the schema and data resolvers for the plugin API.
 
