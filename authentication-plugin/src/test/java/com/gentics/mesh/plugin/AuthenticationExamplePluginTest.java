@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.ClassRule;
@@ -45,11 +44,7 @@ public class AuthenticationExamplePluginTest {
 		.withOptions(meshOptions())
 		.waitForStartup();
 
-	private static OkHttpClient httpClient = new OkHttpClient.Builder()
-		.writeTimeout(15, TimeUnit.SECONDS)
-		.readTimeout(15, TimeUnit.SECONDS)
-		.connectTimeout(15, TimeUnit.SECONDS)
-		.build();
+	private static OkHttpClient httpClient = new OkHttpClient.Builder().build();
 
 	private static MeshOptions meshOptions() {
 		MeshOptions options = OptionsLoader.generateDefaultConfig();

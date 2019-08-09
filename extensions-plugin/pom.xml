@@ -8,7 +8,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mesh.version>0.37.0</mesh.version>
+		<mesh.version>0.38.0</mesh.version>
 
 		<plugin.license>Apache License 2.0</plugin.license>
 		<plugin.version>${project.version}</plugin.version>

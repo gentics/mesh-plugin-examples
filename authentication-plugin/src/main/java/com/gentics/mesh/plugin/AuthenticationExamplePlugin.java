@@ -18,7 +18,6 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.web.RoutingContext;
 
 public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthServicePlugin {
 
@@ -29,9 +28,26 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 	}
 
 	@Override
-	public MappingResult mapToken(RoutingContext rc, JsonObject token) {
-		log.info("Mapping groups in plugin");
+	public MappingResult mapToken(HttpServerRequest req, String uuid, JsonObject token) {
 		MappingResult result = new MappingResult();
+
+		if (uuid == null) {
+			log.info("First time login of the user");
+		} else {
+			log.info("Already synced user is logging in.");
+		}
+
+		log.info("Mapping user in plugin");
+		printToken(token);
+		String username = token.getString("preferred_username");
+		UserUpdateRequest user = new UserUpdateRequest();
+		user.setUsername(username);
+		user.setEmailAddress("mapped@email.tld");
+		user.setFirstname("mapepdFirstname");
+		user.setLastname("mapepdLastname");
+		result.setUser(user);
+
+		log.info("Mapping groups in plugin");
 		List<GroupResponse> groupList = new ArrayList<>();
 		groupList.add(new GroupResponse().setName("group1"));
 		groupList.add(new GroupResponse()
@@ -48,15 +64,16 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 		roleList.add(new RoleResponse().setName("role2"));
 		result.setRoles(roleList);
 
-		log.info("Mapping user in plugin");
-		printToken(token);
-		String username = token.getString("preferred_username");
-		UserUpdateRequest user = new UserUpdateRequest();
-		user.setUsername(username);
-		user.setEmailAddress("mapped@email.tld");
-		user.setFirstname("mapepdFirstname");
-		user.setLastname("mapepdLastname");
-		result.setUser(user);
+		result.setGroupFilter(groupName -> {
+			log.info("Handling removel of user from group {" + groupName + "}");
+			return false;
+		});
+
+		result.setRoleFilter((groupName, roleName) -> {
+			log.info("Handling removal of role {" + roleName + "} from {" + groupName + "}");
+			return false;
+		});
+
 		return result;
 	}
 
@@ -65,18 +82,6 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 		log.info("Checking token. Accepting..");
 		printToken(token);
 		return true;
-	}
-
-	@Override
-	public boolean removeRoleFromGroup(String roleName, String groupName, JsonObject token) {
-		log.info("Handling removal of role {" + roleName + "} from {" + groupName + "}");
-		return false;
-	}
-
-	@Override
-	public boolean removeUserFromGroup(String groupName, JsonObject token) {
-		log.info("Handling removel of user from group {" + groupName + "}");
-		return false;
 	}
 
 	private void printToken(JsonObject token) {
