@@ -1,6 +1,6 @@
 # GraphQL Book Library Plugin
 
-This plugin is inspired by the link:https://www.graphql-java.com/tutorials/getting-started-with-spring-boot/[Getting Started GraphQL Java Tutorial].
+This plugin is inspired by the [Getting Started GraphQL Java Tutorial](https://www.graphql-java.com/tutorials/getting-started-with-spring-boot).
 
 This example shows how to setup a GraphQL plugin which uses a static schema definition.
 
