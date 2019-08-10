@@ -91,6 +91,7 @@
                   implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
                     <Plugin-Id>${plugin.id}</Plugin-Id>
+                    <Plugin-Namme>${plugin.name}</Plugin-Namme>
                     <Plugin-Version>${plugin.version}</Plugin-Version>
                     <Plugin-Author>${plugin.author}</Plugin-Author>
                     <Plugin-Class>${plugin.class}</Plugin-Class>
