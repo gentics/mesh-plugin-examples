@@ -1,7 +1,6 @@
 package com.gentics.mesh.plugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.pf4j.PluginWrapper;
@@ -18,7 +17,6 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.web.RoutingContext;
 
 public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthServicePlugin {
 
@@ -29,24 +27,8 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 	}
 
 	@Override
-	public MappingResult mapToken(RoutingContext rc, JsonObject token) {
-		log.info("Mapping groups in plugin");
+	public MappingResult mapToken(HttpServerRequest req, String userUuid, JsonObject token) {
 		MappingResult result = new MappingResult();
-		List<GroupResponse> groupList = new ArrayList<>();
-		groupList.add(new GroupResponse().setName("group1"));
-		groupList.add(new GroupResponse()
-			.setName("group2")
-			.setRoles(Arrays.asList(new RoleReference().setName("role1"))));
-		groupList.add(new GroupResponse()
-			.setName("group3")
-			.setRoles(Arrays.asList(new RoleReference().setName("role1"), new RoleReference().setName("role2"))));
-		result.setGroups(groupList);
-
-		log.info("Mapping role in plugin");
-		List<RoleResponse> roleList = new ArrayList<>();
-		roleList.add(new RoleResponse().setName("role1"));
-		roleList.add(new RoleResponse().setName("role2"));
-		result.setRoles(roleList);
 
 		log.info("Mapping user in plugin");
 		printToken(token);
@@ -57,6 +39,33 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 		user.setFirstname("mapepdFirstname");
 		user.setLastname("mapepdLastname");
 		result.setUser(user);
+
+		log.info("Mapping role in plugin");
+		List<RoleResponse> roleList = new ArrayList<>();
+		roleList.add(new RoleResponse().setName("role1"));
+		roleList.add(new RoleResponse().setName("role2"));
+		result.setRoles(roleList);
+
+		log.info("Mapping groups in plugin");
+		List<GroupResponse> groupList = new ArrayList<>();
+		groupList.add(new GroupResponse().setName("group1"));
+		groupList.add(new GroupResponse()
+			.setName("group2")
+			.setRoles(new RoleReference().setName("role1")));
+		groupList.add(new GroupResponse()
+			.setName("group3")
+			.setRoles(new RoleReference().setName("role1"), new RoleReference().setName("role2")));
+		result.setGroups(groupList);
+
+		result.setRoleFilter((groupName, roleName) -> {
+			log.info("Handling removal of role {" + roleName + "} from group {" + groupName + "}");
+			return false;
+		});
+
+		result.setGroupFilter(groupName -> {
+			log.info("Handling removel of user from group {" + groupName + "}");
+			return false;
+		});
 		return result;
 	}
 
@@ -65,18 +74,6 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 		log.info("Checking token. Accepting..");
 		printToken(token);
 		return true;
-	}
-
-	@Override
-	public boolean removeRoleFromGroup(String roleName, String groupName, JsonObject token) {
-		log.info("Handling removal of role {" + roleName + "} from {" + groupName + "}");
-		return false;
-	}
-
-	@Override
-	public boolean removeUserFromGroup(String groupName, JsonObject token) {
-		log.info("Handling removel of user from group {" + groupName + "}");
-		return false;
 	}
 
 	private void printToken(JsonObject token) {

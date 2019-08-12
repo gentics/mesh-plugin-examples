@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.ClassRule;
@@ -45,11 +44,7 @@ public class AuthenticationExamplePluginTest {
 		.withOptions(meshOptions())
 		.waitForStartup();
 
-	private static OkHttpClient httpClient = new OkHttpClient.Builder()
-		.writeTimeout(15, TimeUnit.SECONDS)
-		.readTimeout(15, TimeUnit.SECONDS)
-		.connectTimeout(15, TimeUnit.SECONDS)
-		.build();
+	private static OkHttpClient httpClient = new OkHttpClient.Builder().build();
 
 	private static MeshOptions meshOptions() {
 		MeshOptions options = OptionsLoader.generateDefaultConfig();
@@ -74,11 +69,11 @@ public class AuthenticationExamplePluginTest {
 		// 1. Login the user
 		JsonObject authInfo = loginKeycloak();
 		String token = authInfo.getString("access_token");
-		client().setAPIKey(token);
+		restClient().setAPIKey(token);
 		System.out.println("Login Token:\n" + authInfo.encodePrettily());
 
 		// 2. Invoke authenticated request
-		UserResponse me = call(() -> client().me());
+		UserResponse me = call(() -> restClient().me());
 		assertEquals("mapped@email.tld", me.getEmailAddress());
 		assertEquals("mapepdFirstname", me.getFirstname());
 		assertEquals("mapepdLastname", me.getLastname());
@@ -86,9 +81,9 @@ public class AuthenticationExamplePluginTest {
 		String uuid = me.getUuid();
 
 		// 3. Invoke request again to ensure that the previously created user gets returned
-		call(() -> client().me());
+		call(() -> restClient().me());
 
-		UserResponse me2 = call(() -> client().me());
+		UserResponse me2 = call(() -> restClient().me());
 		System.out.println(me2.toJson());
 
 		assertEquals("The uuid should not change. The previously created user should be returned.", uuid, me2.getUuid());
@@ -99,23 +94,23 @@ public class AuthenticationExamplePluginTest {
 		JsonObject meJson = new JsonObject(get(VersionHandler.CURRENT_API_BASE_PATH + "/auth/me"));
 		assertEquals("anonymous", meJson.getString("username"));
 
-		client().setAPIKey(null);
-		client().setLogin("admin", "admin");
-		client().login().blockingGet();
+		restClient().setAPIKey(null);
+		restClient().setLogin("admin", "admin");
+		restClient().login().blockingGet();
 
 		// Now invoke request with regular Mesh API token.
-		UserAPITokenResponse meshApiToken = call(() -> client().issueAPIToken(me2.getUuid()));
-		client().logout().blockingGet();
-		client().setAPIKey(meshApiToken.getToken());
-		me = call(() -> client().me());
+		UserAPITokenResponse meshApiToken = call(() -> restClient().issueAPIToken(me2.getUuid()));
+		restClient().logout().blockingGet();
+		restClient().setAPIKey(meshApiToken.getToken());
+		me = call(() -> restClient().me());
 		assertEquals("dummyuser", me.getUsername());
 
 		// Test broken token
-		client().setAPIKey("borked");
-		call(() -> client().me(), UNAUTHORIZED, "error_not_authorized");
+		restClient().setAPIKey("borked");
+		call(() -> restClient().me(), UNAUTHORIZED, "error_not_authorized");
 
-		client().setAPIKey(null);
-		UserResponse anonymous = call(() -> client().me());
+		restClient().setAPIKey(null);
+		UserResponse anonymous = call(() -> restClient().me());
 		assertEquals("anonymous", anonymous.getUsername());
 	}
 
@@ -170,7 +165,7 @@ public class AuthenticationExamplePluginTest {
 		return httpClient;
 	}
 
-	private MeshRestClient client() {
+	private MeshRestClient restClient() {
 		return server.client();
 	}
 }
