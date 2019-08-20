@@ -8,7 +8,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mesh.version>0.38.0</mesh.version>
+    <mesh.version>0.39.2</mesh.version>
 
     <!-- We use these properties to specify the plugin manifest -->
     <plugin.id>graphql</plugin.id>
@@ -91,7 +91,7 @@
                   implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
                     <Plugin-Id>${plugin.id}</Plugin-Id>
-                    <Plugin-Namme>${plugin.name}</Plugin-Namme>
+                    <Plugin-Name>${plugin.name}</Plugin-Name>
                     <Plugin-Version>${plugin.version}</Plugin-Version>
                     <Plugin-Author>${plugin.author}</Plugin-Author>
                     <Plugin-Class>${plugin.class}</Plugin-Class>

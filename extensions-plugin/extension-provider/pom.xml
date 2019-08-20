@@ -50,6 +50,7 @@
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
 										<Plugin-Id>${plugin.id}</Plugin-Id>
+										<Plugin-Name>${plugin.name}</Plugin-Name>
 										<Plugin-Version>${plugin.version}</Plugin-Version>
 										<Plugin-Author>${plugin.author}</Plugin-Author>
 										<Plugin-Class>${plugin.class}</Plugin-Class>
