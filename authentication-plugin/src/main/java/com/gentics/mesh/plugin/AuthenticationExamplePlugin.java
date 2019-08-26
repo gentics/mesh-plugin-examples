@@ -65,12 +65,14 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 		result.setRoles(roleList);
 
 		result.setGroupFilter(groupName -> {
-			log.info("Handling removel of user from group {" + groupName + "}");
+			log.info("Handling removal of user from group {" + groupName + "}");
+			// Return true here if you want to remove the group with the given name
 			return false;
 		});
 
 		result.setRoleFilter((groupName, roleName) -> {
 			log.info("Handling removal of role {" + roleName + "} from {" + groupName + "}");
+			// Return true here if you want to remove the role with the given name
 			return false;
 		});
 
