@@ -1,19 +1,26 @@
 package com.gentics.mesh.plugin;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.pf4j.PluginWrapper;
 
+import com.gentics.mesh.auth.util.KeycloakUtils;
 import com.gentics.mesh.core.rest.group.GroupResponse;
 import com.gentics.mesh.core.rest.role.RoleReference;
 import com.gentics.mesh.core.rest.role.RoleResponse;
 import com.gentics.mesh.core.rest.user.UserUpdateRequest;
 import com.gentics.mesh.plugin.auth.AuthServicePlugin;
 import com.gentics.mesh.plugin.auth.MappingResult;
+import com.gentics.mesh.plugin.config.AuthenticationExamplePluginConfig;
 import com.gentics.mesh.plugin.env.PluginEnvironment;
 
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -22,9 +29,34 @@ import io.vertx.core.logging.LoggerFactory;
 public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthServicePlugin {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthenticationExamplePlugin.class);
+	private AuthenticationExamplePluginConfig config;
+	private Set<JsonObject> publicKeys = Collections.emptySet();
 
 	public AuthenticationExamplePlugin(PluginWrapper wrapper, PluginEnvironment env) {
 		super(wrapper, env);
+	}
+
+	@Override
+	public Set<JsonObject> getPublicKeys() {
+		return publicKeys;
+	}
+
+	@Override
+	public Completable initialize() {
+		Single<AuthenticationExamplePluginConfig> rxConfig = Single.fromCallable(() -> {
+			if (!getConfigFile().exists()) {
+				AuthenticationExamplePluginConfig config = new AuthenticationExamplePluginConfig();
+				return writeConfig(config);
+			} else {
+				return readConfig(AuthenticationExamplePluginConfig.class);
+			}
+		}).doOnSuccess(config -> {
+			log.info("Loaded config {\n" + PluginConfigUtil.getYAMLMapper().writeValueAsString(config) + "\n}");
+			this.config = config;
+			this.publicKeys = loadPublicKeys();
+		});
+
+		return rxConfig.ignoreElement();
 	}
 
 	@Override
@@ -90,5 +122,38 @@ public class AuthenticationExamplePlugin extends AbstractPlugin implements AuthS
 		String username = token.getString("preferred_username");
 		System.out.println("Token for {" + username + "}");
 		System.out.println(token.encodePrettily());
+	}
+
+	/**
+	 * Load the public keys for the configured realm from keycloak.
+	 * 
+	 * @return
+	 */
+	private Set<JsonObject> loadPublicKeys() {
+		AuthenticationExamplePluginConfig config = getConfig();
+		try {
+			URL url = new URL(config.getUrl());
+			String proto = url.getProtocol();
+			String host = url.getHost();
+			int port = url.getPort();
+			if (port == -1) {
+				port = proto.equalsIgnoreCase("https") ? 443 : 80;
+			}
+			String realmName = config.getRealmName();
+			Set<JsonObject> keys = KeycloakUtils.loadJWKs(proto, host, port, realmName);
+			if (log.isDebugEnabled()) {
+				for (JsonObject key : keys) {
+					log.debug("Loaded public key {\n" + key.encodePrettily() + "\n}");
+				}
+			}
+			return keys;
+		} catch (Exception e) {
+			log.error("Error while loading public keys", e);
+		}
+		return Collections.emptySet();
+	}
+
+	public AuthenticationExamplePluginConfig getConfig() {
+		return config;
 	}
 }

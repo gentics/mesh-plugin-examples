@@ -8,18 +8,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-import com.gentics.mesh.OptionsLoader;
 import com.gentics.mesh.core.rest.user.UserAPITokenResponse;
 import com.gentics.mesh.core.rest.user.UserResponse;
-import com.gentics.mesh.etc.config.MeshOptions;
-import com.gentics.mesh.etc.config.OAuth2Options;
-import com.gentics.mesh.etc.config.OAuth2ServerConfig;
 import com.gentics.mesh.handler.VersionHandler;
+import com.gentics.mesh.plugin.config.AuthenticationExamplePluginConfig;
 import com.gentics.mesh.rest.client.MeshRestClient;
 import com.gentics.mesh.test.docker.KeycloakContainer;
 import com.gentics.mesh.test.local.MeshLocalServer;
@@ -37,31 +35,21 @@ public class AuthenticationExamplePluginTest {
 	public static final KeycloakContainer keycloak = new KeycloakContainer("/keycloak/realm.json")
 		.waitingFor(Wait.forHttp("/auth/realms/master-test"));
 
+	@BeforeClass
+	public static void configurePlugin() {
+		AuthenticationExamplePluginConfig config = new AuthenticationExamplePluginConfig();
+		config.setRealmName("master-test");
+		config.setUrl("http://" + keycloak.getContainerIpAddress() + ":" + keycloak.getFirstMappedPort());
+		AuthenticationExampleTestPlugin.config = config;
+	}
+
 	@Rule
 	public final MeshLocalServer server = new MeshLocalServer()
 		.withInMemoryMode()
-		.withPlugin(AuthenticationExamplePlugin.class, "authPlugin")
-		.withOptions(meshOptions())
+		.withPlugin(AuthenticationExampleTestPlugin.class, "authPlugin")
 		.waitForStartup();
 
 	private static OkHttpClient httpClient = new OkHttpClient.Builder().build();
-
-	private static MeshOptions meshOptions() {
-		MeshOptions options = OptionsLoader.generateDefaultConfig();
-		OAuth2Options oauth2Options = options.getAuthenticationOptions().getOauth2();
-		oauth2Options.setEnabled(true);
-
-		OAuth2ServerConfig realmConfig = new OAuth2ServerConfig();
-		realmConfig.setAuthServerUrl("http://" + keycloak.getHost() + ":" + keycloak.getMappedPort(8080) + "/auth");
-		realmConfig.setRealm("master-test");
-		realmConfig.setSslRequired("external");
-		realmConfig.setResource("mesh");
-		realmConfig.setConfidentialPort(0);
-		realmConfig.addCredential("secret", "9b65c378-5b4c-4e25-b5a1-a53a381b5fb4");
-
-		oauth2Options.setConfig(realmConfig);
-		return options;
-	}
 
 	@Test
 	public void testPlugin() throws IOException {
