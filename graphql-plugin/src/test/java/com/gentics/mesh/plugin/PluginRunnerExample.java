@@ -16,7 +16,7 @@ public class PluginRunnerExample {
 	private static String PROJECT_NAME = "test";
 
 	public static void main(String[] args) {
-		MeshOptions options = OptionsLoader.generateDefaultConfig();
+		MeshOptions options = OptionsLoader.generateDefaultConfig(null);
 		// Enable in-memory mode
 		options.getStorageOptions().setDirectory(null);
 
