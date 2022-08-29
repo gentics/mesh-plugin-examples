@@ -3,7 +3,7 @@ package com.gentics.mesh.plugin;
 import com.gentics.mesh.Mesh;
 import com.gentics.mesh.OptionsLoader;
 import com.gentics.mesh.core.rest.project.ProjectCreateRequest;
-import com.gentics.mesh.etc.config.MeshOptions;
+import com.gentics.mesh.etc.config.OrientDBMeshOptions;
 import com.gentics.mesh.rest.client.MeshRestClient;
 
 import io.reactivex.Completable;
@@ -16,12 +16,12 @@ public class PluginRunnerExample {
 	private static String PROJECT_NAME = "test";
 
 	public static void main(String[] args) {
-		MeshOptions options = OptionsLoader.generateDefaultConfig(null);
+		OrientDBMeshOptions options = OptionsLoader.createOrloadOptions(OrientDBMeshOptions.class);
 		// Enable in-memory mode
 		options.getStorageOptions().setDirectory(null);
 
 		// Disable embedded ES
-		options.getSearchOptions().setUrl(null).setStartEmbedded(false);
+		options.getSearchOptions().setUrl(null);
 		options.getAuthenticationOptions().setKeystorePath("target/keystore_" + System.currentTimeMillis() + ".jceks");
 
 		MeshRestClient client = MeshRestClient.create("localhost", 8080, false);

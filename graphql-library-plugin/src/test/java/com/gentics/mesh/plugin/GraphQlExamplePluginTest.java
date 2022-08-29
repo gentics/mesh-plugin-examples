@@ -21,7 +21,7 @@ public class GraphQlExamplePluginTest {
 	private static String PROJECT = "test";
 
 	@ClassRule
-	public static final MeshLocalServer server = new MeshLocalServer()
+	public static final MeshLocalServer server = new OrientDBMeshLocalServer()
 		.withInMemoryMode()
 		.withPlugin(GraphQLExamplePlugin.class, "myPlugin")
 		.waitForStartup();

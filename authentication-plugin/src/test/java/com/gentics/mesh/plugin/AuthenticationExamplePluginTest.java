@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import com.gentics.mesh.MeshVersion;
 import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -16,7 +17,6 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import com.gentics.mesh.core.rest.user.UserAPITokenResponse;
 import com.gentics.mesh.core.rest.user.UserResponse;
-import com.gentics.mesh.handler.VersionHandler;
 import com.gentics.mesh.plugin.config.AuthenticationExamplePluginConfig;
 import com.gentics.mesh.rest.client.MeshRestClient;
 import com.gentics.mesh.test.docker.KeycloakContainer;
@@ -44,7 +44,7 @@ public class AuthenticationExamplePluginTest {
 	}
 
 	@Rule
-	public final MeshLocalServer server = new MeshLocalServer()
+	public final MeshLocalServer server = new OrientDBMeshLocalServer()
 		.withInMemoryMode()
 		.withPlugin(AuthenticationExampleTestPlugin.class, "authPlugin")
 		.waitForStartup();
@@ -79,7 +79,7 @@ public class AuthenticationExamplePluginTest {
 		assertEquals("group2", me2.getGroups().get(1).getName());
 
 		// Invoke request without token
-		JsonObject meJson = new JsonObject(get(VersionHandler.CURRENT_API_BASE_PATH + "/auth/me"));
+		JsonObject meJson = new JsonObject(get(MeshVersion.CURRENT_API_BASE_PATH + "/auth/me"));
 		assertEquals("anonymous", meJson.getString("username"));
 
 		restClient().setAPIKey(null);

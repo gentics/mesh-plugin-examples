@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.gentics.mesh.plugin.examples</groupId>
+    <artifactId>mesh-plugin-examples</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <parent>
+        <artifactId>mesh-plugin-parent</artifactId>
+        <groupId>com.gentics.mesh</groupId>
+        <version>1.9.1</version>
+    </parent>
+
+    <properties>
+        <!--  Don't forget to also update dependencyManagement section! -->
+        <mesh.version>1.9.1</mesh.version>
+    </properties>
+
+    <modules>
+        <module>authentication-plugin</module>
+        <module>extensions-plugin</module>
+        <module>graphql-library-plugin</module>
+        <module>graphql-plugin</module>
+        <module>hello-world-plugin</module>
+        <module>test-common</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.gentics.mesh</groupId>
+                <artifactId>mesh-bom</artifactId>
+                <version>1.9.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.gentics.mesh.plugin.examples</groupId>
+                <artifactId>mesh-plugins-test-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>maven.gentics.com</id>
+            <name>Gentics Maven Repository</name>
+            <url>https://maven.gentics.com/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+</project>

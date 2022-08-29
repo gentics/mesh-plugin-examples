@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import com.gentics.mesh.plugin.OrientDBMeshLocalServer;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class HelloWorldPluginTest {
 	private static final String apiName = "hello-world";
 
 	@ClassRule
-	public static final MeshLocalServer server = new MeshLocalServer()
+	public static final MeshLocalServer server = new OrientDBMeshLocalServer()
 		.withInMemoryMode()
 		.withPlugin(HelloWorldPlugin.class, apiName)
 		.waitForStartup();
